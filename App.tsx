@@ -7,10 +7,14 @@ import AllExpenses from "./screens/AllExpenses";
 import RecentExpenses from "./screens/RecentExpenses";
 import { Colors } from "./constants/styles";
 import { Ionicons } from "@expo/vector-icons";
+import IconButton from "./components/UI/IconButton";
+import ExpensesContextProvider from "./store/expenses-context";
 
 type RootParamsList = {
   AllExpenses: undefined;
-  ManageExpenses: undefined;
+  ManageExpenses?: {
+    expenseID: string;
+  };
   RecentExpenses: undefined;
   Tabbed: undefined;
 };
@@ -21,7 +25,7 @@ const Tab = createBottomTabNavigator<RootParamsList>();
 const Tabbed = (): JSX.Element => {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         headerStyle: {
           backgroundColor: Colors.primary500,
         },
@@ -30,7 +34,19 @@ const Tabbed = (): JSX.Element => {
           backgroundColor: Colors.primary500,
         },
         tabBarActiveTintColor: Colors.accent500,
-      }}
+        headerRight: ({ tintColor }) => {
+          return (
+            <IconButton
+              name="add"
+              size={24}
+              color={tintColor!}
+              onPress={() => {
+                navigation.navigate("ManageExpenses");
+              }}
+            />
+          );
+        },
+      })}
     >
       <Tab.Screen
         name="RecentExpenses"
@@ -62,18 +78,35 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Tabbed">
-          <Stack.Screen
-            name="Tabbed"
-            component={Tabbed}
-            options={{
-              headerShown: false,
+      <ExpensesContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Tabbed"
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: Colors.primary500,
+              },
+              headerTintColor: "white",
             }}
-          />
-          <Stack.Screen name="ManageExpenses" component={ManageExpense} />
-        </Stack.Navigator>
-      </NavigationContainer>
+          >
+            <Stack.Screen
+              name="Tabbed"
+              component={Tabbed}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="ManageExpenses"
+              component={ManageExpense}
+              options={{
+                title: "Manage Expense",
+                presentation: "modal",
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ExpensesContextProvider>
     </>
   );
 }

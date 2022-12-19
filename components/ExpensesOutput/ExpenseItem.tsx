@@ -1,17 +1,36 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Colors } from "../../constants/styles";
 import { getDate } from "../../helpers/date";
 
+type RootParamsList = {
+  ManageExpenses?: {
+    expenseID: string;
+  };
+};
+
 interface Props {
+  id: string;
   description: string;
   date: Date;
   amount: number;
 }
 
-const ExpenseItem: FC<Props> = ({ description, date, amount }) => {
+const ExpenseItem: FC<Props> = ({ id, description, date, amount }) => {
+  const navigation = useNavigation<BottomTabNavigationProp<RootParamsList>>();
+  const expensePressHandler = () => {
+    navigation.navigate("ManageExpenses", {
+      expenseID: id,
+    });
+  };
+
   return (
-    <Pressable>
+    <Pressable
+      onPress={expensePressHandler}
+      style={({ pressed }) => pressed && styles.pressed}
+    >
       <View style={styles.expenseItem}>
         <View>
           <Text style={[styles.textBase, styles.description]}>
@@ -65,5 +84,8 @@ const styles = StyleSheet.create({
   amount: {
     color: Colors.primary500,
     fontWeight: "bold",
+  },
+  pressed: {
+    opacity: 0.75,
   },
 });

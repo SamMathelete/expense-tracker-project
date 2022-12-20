@@ -2,7 +2,6 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { FC, useContext, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
-import Button from "../components/UI/Button";
 import IconButton from "../components/UI/IconButton";
 import { Colors } from "../constants/styles";
 import { ExpensesContext } from "../store/expenses-context";
@@ -12,6 +11,12 @@ type RootParamsList = {
     expenseID: string;
   };
 };
+
+interface expense {
+  amount: number;
+  date: Date;
+  description: string;
+}
 
 type Props = BottomTabScreenProps<RootParamsList, "ManageExpenses">;
 
@@ -37,31 +42,24 @@ const ManageExpense: FC<Props> = ({ navigation, route }) => {
     navigation.goBack();
   };
 
-  const confirmHandler = () => {
-    const DUMMY_UPDATE = {
-      description: "Test",
-      amount: 420.69,
-      date: new Date(),
-    };
+  const confirmHandler = (expenseData: expense) => {
     if (isEditing) {
-      ctx.updateExpense(expenseID, DUMMY_UPDATE);
+      ctx.updateExpense(expenseID, expenseData);
     } else {
-      ctx.addExpense(DUMMY_UPDATE);
+      ctx.addExpense(expenseData);
     }
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
-      <ExpenseForm />
-      <View style={styles.buttonContainer}>
-        <Button style={styles.button} onPress={confirmHandler}>
-          {isEditing ? "Update" : "Add"}
-        </Button>
-        <Button style={styles.button} mode="flat" onPress={cancelHandler}>
-          Cancel
-        </Button>
-      </View>
+      <ExpenseForm
+        expenseID={expenseID}
+        isEditing={isEditing}
+        cancelHandler={cancelHandler}
+        onSubmit={confirmHandler}
+      />
+
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -83,20 +81,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary800,
   },
   deleteContainer: {
-    marginTop: 16,
+    marginTop: 40,
     paddingTop: 8,
     borderTopWidth: 2,
     borderTopColor: Colors.primary200,
     alignItems: "center",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
   },
 });
 

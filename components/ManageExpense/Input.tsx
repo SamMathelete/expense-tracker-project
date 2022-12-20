@@ -11,19 +11,27 @@ import { Colors } from "../../constants/styles";
 
 interface Props {
   label: string;
+  style?: StyleProp<TextStyle>;
   textInputConfig?: React.ComponentProps<typeof TextInput>;
+  invalid: boolean;
 }
 
-const Input: FC<Props> = ({ label, textInputConfig }) => {
+const Input: FC<Props> = ({ label, style, textInputConfig, invalid }) => {
   let inputStyles: StyleProp<TextStyle> = [styles.input];
 
   if (textInputConfig && textInputConfig.multiline) {
     inputStyles.push(styles.inputMultiline);
   }
 
+  if (invalid) {
+    inputStyles.push(styles.invalidInput);
+  }
+
   return (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+    <View style={[styles.inputContainer, style]}>
+      <Text style={[styles.label, invalid && styles.invalidLabel]}>
+        {label}
+      </Text>
       <TextInput style={inputStyles} {...textInputConfig} />
     </View>
   );
@@ -51,5 +59,11 @@ const styles = StyleSheet.create({
   inputMultiline: {
     minHeight: 100,
     textAlignVertical: "top",
+  },
+  invalidLabel: {
+    color: Colors.error500,
+  },
+  invalidInput: {
+    backgroundColor: Colors.error50,
   },
 });

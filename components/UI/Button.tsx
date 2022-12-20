@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.75,
-    color: Colors.primary100,
+    backgroundColor: Colors.primary100,
+    borderRadius: 4,
   },
 });

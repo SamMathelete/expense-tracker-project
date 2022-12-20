@@ -1,6 +1,7 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { FC, useContext, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
+import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import Button from "../components/UI/Button";
 import IconButton from "../components/UI/IconButton";
 import { Colors } from "../constants/styles";
@@ -52,6 +53,7 @@ const ManageExpense: FC<Props> = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      <ExpenseForm />
       <View style={styles.buttonContainer}>
         <Button style={styles.button} onPress={confirmHandler}>
           {isEditing ? "Update" : "Add"}

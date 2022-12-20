@@ -10,7 +10,7 @@ import {
 import { Colors } from "../../constants/styles";
 
 interface Props {
-  label: string;
+  label: number;
   style?: StyleProp<TextStyle>;
   textInputConfig?: React.ComponentProps<typeof TextInput>;
   invalid: boolean;

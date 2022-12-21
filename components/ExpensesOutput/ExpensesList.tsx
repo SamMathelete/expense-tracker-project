@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FlatList, ListRenderItemInfo, Text } from "react-native";
+import { FlatList, ListRenderItemInfo } from "react-native";
 import ExpenseItem from "./ExpenseItem";
 
 interface Expense {

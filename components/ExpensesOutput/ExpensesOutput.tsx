@@ -4,7 +4,7 @@ import { Colors } from "../../constants/styles";
 import ExpensesList from "./ExpensesList";
 import ExpensesSummary from "./ExpensesSummary";
 
-interface Expense {
+export interface Expense {
   description: string;
   date: Date;
   amount: number;

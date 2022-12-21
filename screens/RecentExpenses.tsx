@@ -1,17 +1,52 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
 import { getDateMinusDays } from "../helpers/date";
+import { fetchExpenses } from "../helpers/http";
 import { ExpensesContext } from "../store/expenses-context";
 
-interface Expense {
-  description: string;
-  date: Date;
-  amount: number;
-  id: string;
-}
-
 const RecentExpenses: FC = () => {
+  const [isFetching, setIsFetching] = useState<boolean>(true);
+  const [isError, setIsError] = useState<string | null>(null);
   const ctx = useContext(ExpensesContext);
+
+  useEffect(() => {
+    const getExpenses = async () => {
+      setIsFetching((state) => true);
+      try {
+        const fetchedExpenses = await fetchExpenses();
+        ctx.setExpenses(fetchedExpenses);
+      } catch (error) {
+        setIsError("Failed to fetch expenses!");
+      }
+      setIsFetching((state) => false);
+    };
+    getExpenses();
+  }, []);
+
+  const errorHandler = () => {
+    setIsError(null);
+    const getExpenses = async () => {
+      setIsFetching((state) => true);
+      try {
+        const fetchedExpenses = await fetchExpenses();
+        ctx.setExpenses(fetchedExpenses);
+      } catch (error) {
+        setIsError("Failed to fetch expenses!");
+      }
+      setIsFetching((state) => false);
+    };
+    getExpenses();
+  };
+
+  if (isFetching) {
+    return <LoadingOverlay />;
+  }
+
+  if (isError && !isFetching) {
+    return <ErrorOverlay message={isError} onConfirm={errorHandler} />;
+  }
 
   const expenses = ctx.expensesArray.filter((expense) => {
     const today = new Date();

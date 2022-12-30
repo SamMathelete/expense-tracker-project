@@ -4,7 +4,7 @@ import { expense } from "../screens/ManageExpense";
 import { ExpenseData } from "../store/expenses-context";
 
 const BACKEND_URL =
-  "https://expense-tracker-project-7c64d-default-rtdb.asia-southeast1.firebasedatabase.app";
+  "https://native-features-project-default-rtdb.firebaseio.com";
 
 export const storeExpense = async (expenseData: expense) => {
   const response = await axios.post(
